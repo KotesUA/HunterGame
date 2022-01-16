@@ -1,3 +1,5 @@
+﻿//Bullet.cs
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,12 +8,11 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float _speed;
-
-    private Vector3 _direction;
-
+    private Vector3 _direction; //встроенный тип
+    
     void Update()
     {
-        transform.position += _speed * Time.deltaTime * _direction;
+        transform.position += _speed * Time.deltaTime *_direction;
     }
 
     public void SetDirection(Vector3 direction)
@@ -19,13 +20,13 @@ public class Bullet : MonoBehaviour
         _direction = direction;
     }
 
-    private void OnTriggerEnter2D(Collider2D collider)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collider.gameObject.CompareTag("Hunter") || collider.gameObject.CompareTag("Bound"))
+        if (collision.gameObject.CompareTag("Bound") || collision.gameObject.CompareTag("Player"))
         {
             return;
         }
-        Destroy(collider.gameObject);
+        Destroy(collision.gameObject);
         Destroy(gameObject);
-    }
+    } 
 }

@@ -1,3 +1,7 @@
+﻿// Hunter.cs
+
+using Assets.Scripts.Enums;
+using Assets.Scripts.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

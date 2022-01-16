@@ -1,3 +1,6 @@
+﻿// Wolf.cs
+
+using Assets.Scripts.Enums;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +13,21 @@ public class Wolf : MonoBehaviour
 
     [SerializeField]
     private float LookRadius = 20;
-
+  
     [SerializeField]
-    private int _MaxDistance;
+    private int _maxDistance;
     private AnimalState state;
 
-
-    private Vector3 WayPoint;
+    private Vector3 wayPoint;
     private Vector3 target;
+
+    
     void Start()
     {
         SetState();
     }
 
-
+  
     void Update()
     {
         SetState();
@@ -33,58 +37,65 @@ public class Wolf : MonoBehaviour
                 transform.position += Speed * Time.deltaTime * (target - transform.position).normalized;
                 break;
             case AnimalState.Walk:
-                transform.position += Speed / 2 * Time.deltaTime * (WayPoint - transform.position).normalized;
+                transform.position += Speed/2 * Time.deltaTime * (wayPoint - transform.position).normalized;
                 break;
-        }
-
-
+        }     
     }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {//если волк сталкивается с границей то ничего
+        if(collision.gameObject.CompareTag("Bound"))
+        {
+            return;
+        }
+        // если не с границей то убить объект столкновения
+        Destroy(collision.gameObject);
+        SetState();
+    }
+
     private void SetState()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, LookRadius);
-        if (colliders.Length <= 1)
-        {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, LookRadius)
+            .Where(x => x.CompareTag("Wolf") == false && x.CompareTag("Bound") == false).ToArray();
+        if (colliders.Length == 0)
             SetNewDestination();
-        }
         else
-        {
             SetTarget(colliders);
-        }
-
     }
-    private void SetTarget(Collider2D[] coliders)
+
+    private void SetTarget(Collider2D[] colliders)
     {
         if (state == AnimalState.Walk)
         {
-            target = coliders.Where(x => x.gameObject.GetInstanceID() != gameObject.GetInstanceID()).OrderBy(x => Vector2.Distance(x.transform.position, transform.position)).First().transform.position;
+            target = colliders.OrderBy(x => Vector2.Distance(x.transform.position, transform.position)).First().transform.position;
             state = AnimalState.Run;
         }
         if (target == Vector3.zero || Vector2.Distance(transform.position, target) < 0.2)
         {
-            target = coliders.Where(x => x.gameObject.GetInstanceID() != gameObject.GetInstanceID()).OrderBy(x => Vector2.Distance(x.transform.position, transform.position)).First().transform.position;
+            target = colliders.OrderBy(x => Vector2.Distance(x.transform.position, transform.position)).First().transform.position;
             state = AnimalState.Run;
         }
     }
+
     private void SetNewDestination()
     {
-        if (state == AnimalState.Run)
+        if(state == AnimalState.Run)
         {
-            WayPoint = new Vector2(Random.Range(-_MaxDistance, _MaxDistance),
-                Random.Range(-_MaxDistance, _MaxDistance));
+            wayPoint = new Vector2(Random.Range(-_maxDistance, _maxDistance), Random.Range(-_maxDistance, _maxDistance));
             state = AnimalState.Walk;
             return;
         }
-        if (WayPoint == Vector3.zero)
+        if (wayPoint == Vector3.zero)
         {
-            WayPoint = new Vector2(Random.Range(-_MaxDistance, _MaxDistance),
-                Random.Range(-_MaxDistance, _MaxDistance));
+            wayPoint = new Vector2(Random.Range(-_maxDistance, _maxDistance), Random.Range(-_maxDistance, _maxDistance));
             state = AnimalState.Walk;
             return;
         }
-        if (Vector2.Distance(WayPoint, transform.position) < 3)
+        if (Vector2.Distance(wayPoint, transform.position) < 3)
         {
-            WayPoint = new Vector2(Random.Range(-_MaxDistance, _MaxDistance),
-               Random.Range(-_MaxDistance, _MaxDistance));
+
+            wayPoint = new Vector2(Random.Range(-_maxDistance, _maxDistance), Random.Range(-_maxDistance, _maxDistance));
             state = AnimalState.Walk;
             return;
         }

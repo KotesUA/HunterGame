@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public enum AnimalState
+﻿namespace Assets.Scripts.Enums
 {
-    Idle,
-    Run,
-    Walk
+    public enum AnimalState
+    {
+        Idle,
+        Walk,
+        Run
+    }
 }

@@ -1,14 +1,19 @@
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public interface IPlayer
+namespace Assets.Scripts.Interfaces
 {
-    void MoveUp();
+    public interface IPlayer
+    {
+        void MoveDown();
 
-    void MoveDown();
+        void MoveUp();
 
-    void MoveLeft();
+        void MoveRight();
 
-    void MoveRight();
+        void MoveLeft();
+    }
 }

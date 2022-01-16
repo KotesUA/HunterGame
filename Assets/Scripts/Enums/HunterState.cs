@@ -1,16 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿namespace Assets.Scripts.Enums
+{
+    public enum HorizontalState
+    {
+        Idle,
+        Right,
+        Left
+    }
 
-public enum HorizontalState
-{
-    Idle,
-    Right,
-    Left
-}
-public enum VerticalState
-{
-    Idle,
-    Up,
-    Down
+    public enum VerticalState
+    {
+        Idle,
+        Up,
+        Down
+    }
 }
